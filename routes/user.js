@@ -1,14 +1,10 @@
 const { Router } = require('express');
-const { getUser, editUser, deleteUser, updateUser } = require('../controllers/user');
+const { getUser, editUser, createUser, deleteUser, updateUser } = require('../controllers/user');
 const router = Router();
 
 router.get('/', getUser);
-router.put('/', editUser);
-router.post('/', (req, res) => {
-  res.json({
-    msg: 'POST user /api',
-  });
-});
+router.put('/:id', editUser);
+router.post('/', createUser);
 router.delete('/', deleteUser);
 router.patch('/', updateUser);
 
