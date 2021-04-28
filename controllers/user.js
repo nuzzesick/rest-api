@@ -1,3 +1,7 @@
+const User = require('../models/user');
+const bcryptjs = require('bcryptjs');
+const { validationResult } = require('express-validator');
+
 const getUser = (req, res) => {
   const { name = 'no name', age, apikey } = req.query;
   res.json({
@@ -15,12 +19,26 @@ const editUser = (req, res) => {
     id,
   });
 };
-const createUser = (req, res) => {
-  const { body: { name, age } } = req;
+const createUser = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) return res.status(400).json(errors); 
+  const { name, email, password, role } = req.body;
+  const user = new User({ name, email, password, role });
+  // Verify if email exists
+  const emailExists = await User.findOne({ email });
+  if (emailExists) {
+    return res.status(400).json({
+      msg: 'Email already exists'
+    });
+  }
+  // Encrypt password
+  const salt = bcryptjs.genSaltSync();
+  user.password = bcryptjs.hashSync(password, salt);
+  //Save on DB
+  await user.save();
   res.json({
     msg: 'POST user /api',
-    name,
-    age,
+    user,
   });
 };
 const deleteUser = (req, res) => {
