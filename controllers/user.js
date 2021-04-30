@@ -1,6 +1,5 @@
 const User = require('../models/user');
 const bcryptjs = require('bcryptjs');
-const { validationResult } = require('express-validator');
 
 const getUser = (req, res) => {
   const { name = 'no name', age, apikey } = req.query;
@@ -20,8 +19,6 @@ const editUser = (req, res) => {
   });
 };
 const createUser = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) return res.status(400).json(errors); 
   const { name, email, password, role } = req.body;
   const user = new User({ name, email, password, role });
   // Verify if email exists
