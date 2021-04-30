@@ -34,7 +34,6 @@ const createUser = async (req, res) => {
   //Save on DB
   await user.save();
   res.json({
-    msg: 'POST user /api',
     user,
   });
 };
