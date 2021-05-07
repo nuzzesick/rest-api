@@ -1,13 +1,14 @@
 const User = require('../models/user');
 const bcryptjs = require('bcryptjs');
 
-const getUser = (req, res) => {
-  const { name = 'no name', age, apikey } = req.query;
+const getUsers = async (req, res) => {
+  // const { name = 'no name', age, apikey } = req.query;
+  const { limit = 5, from = 0 } = req.query;
+  const users = await User.find()
+    .skip(Number(from))
+    .limit(Number(limit))
   res.json({
-    msg: 'GET user /api',
-    name,
-    age,
-    apikey
+    users,
   });
 };
 const editUser = async (req, res) => {
@@ -19,7 +20,6 @@ const editUser = async (req, res) => {
   }
   const user = await User.findByIdAndUpdate(id, rest);
   res.json({
-    msg: 'PUT user /api',
     user,
   });
 };
@@ -47,5 +47,5 @@ const updateUser = (req, res) => {
 };
 
 module.exports = {
-  getUser, editUser, createUser, deleteUser, updateUser,
+  getUsers, editUser, createUser, deleteUser, updateUser,
 };
