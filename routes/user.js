@@ -10,7 +10,7 @@ router.put('/:id', [
   check('id', 'Is not a valid ID').isMongoId(),
   check('id').custom(userExistsById),
   check('role').custom(isRoleAllowed),
-  fieldValidator
+  fieldValidator,
 ], editUser);
 router.post(
   '/',
@@ -19,11 +19,15 @@ router.post(
     check('email').custom(checkEmail),
     check('password', 'Password must contain more than 6 characters').isLength({ min: 6 }),
     check('role').custom(isRoleAllowed),
-    fieldValidator
+    fieldValidator,
   ],
   createUser
 );
-router.delete('/', deleteUser);
+router.delete('/:id', [
+  check('id', 'Is not a valid ID').isMongoId(),
+  check('id').custom(userExistsById),
+  fieldValidator,
+], deleteUser);
 router.patch('/', updateUser);
 
 module.exports = router;

@@ -40,9 +40,12 @@ const createUser = async (req, res) => {
     user,
   });
 };
-const deleteUser = (req, res) => {
+const deleteUser = async (req, res) => {
+  const { id } = req.params;
+  const user = await User.findByIdAndUpdate(id, { status: false });
   res.json({
-    msg: 'DELETE user /api',
+    msg: 'deleted',
+    user,
   });
 };
 const updateUser = (req, res) => {
